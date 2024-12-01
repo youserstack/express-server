@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    // ES6(ECMAScript 2015) typescript -> javascript
+    // import express from 'express' -> const express = require('express')
+    // export default app -> exports.default = app
+    "target": "ES6",
+    "module": "CommonJS",
+
+    // ES 모듈과 CommonJS 모듈 호환 설정
+    // "esModuleInterop": true ===> import express from 'express'
+    // "esModuleInterop": false ===> import * as express from 'express'
+    "esModuleInterop": true,
+
+    "strict": true,
+    "skipLibCheck": true, // 라이브러리 검사 건너뛰기
+    "forceConsistentCasingInFileNames": true, // 대소문자 구분 일관성 유지
+    "outDir": "dist", // 컴파일된 JavaScript 파일 출력 폴더
+    "rootDir": "src" // TypeScript 소스 파일 위치
+    // "moduleResolution": "node" // Node.js 방식으로 모듈 해석
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules"]
+}
