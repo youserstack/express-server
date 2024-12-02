@@ -1,11 +1,13 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import bodyParser from "body-parser";
 import posts from "./routes/posts";
 import errorHandler from "./middlewares/error";
-import path from "path";
+// import path from "path";
 import connectDB from "./config/db";
+import notFound from "./middlewares/notFound";
+import { engine } from "express-handlebars";
 
 // 환경설정
 dotenv.config();
@@ -19,22 +21,22 @@ app.use(morgan("dev")); // logger
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./views");
+
 // 정적파일
-app.use(express.static(path.join(__dirname, "../public")));
+// app.use(express.static(path.join(__dirname, "../public")));
 
 // 라우터
 app.use("/api/posts", posts);
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const error = new Error("Not Found") as Error & { status: number };
-  error.status = 404;
-  next(error);
-});
 
 // 에러 핸들러
+app.use(notFound);
 app.use(errorHandler);
 
 // 서버 시작
 app.listen(port, async () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
   await connectDB();
 });

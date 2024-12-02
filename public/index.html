@@ -3,9 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
+    <title>Posts</title>
   </head>
   <body>
-    <h1>Hello World</h1>
+    <h1>Posts</h1>
+
+    <form style="border: 1px solid black; padding: 1rem" id="add-post-form">
+      <label for="title">포스트글 제목:</label>
+      <input type="text" id="title" name="title" /><br />
+      <button type="submit">포스트글 생성</button>
+    </form>
+
+    <button id="get-posts-btn">Get Posts</button>
+    <div id="output"></div>
+    <script src="./js/main.js"></script>
   </body>
 </html>
