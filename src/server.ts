@@ -8,11 +8,12 @@ import connectDB from "./configs/db";
 import notFound from "./middlewares/notFound";
 import { engine } from "express-handlebars";
 import home from "./routes/index";
-import posts from "./routes/posts";
 import auth from "./routes/auth";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import session from "express-session";
+// import posts from "./routes/posts";
+// import moment from "moment";
 
 // 환경설정
 dotenv.config();
@@ -22,12 +23,19 @@ passportConfig(passport); // 인증
 const app = express();
 const port = process.env.PORT || 8000;
 
-// 미들웨어
-app.use(morgan("dev")); // logger
+// 바디파서
+if (process.env.NODE_ENV === "development") {
+  // morgan 미들웨어 설정
+  // 커스텀 토큰 생성 (현재 시간을 yyyy-mm-dd 형식으로 반환)
+  // morgan.token("korea-time", () => moment().format("YYYY-MM-DD HH:mm:ss"));
+  // app.use(morgan(":korea-time :method :url :status :response-time ms"));
+  // app.use(morgan("dev"));
+  app.use(morgan("dev"));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// handlebars 템플릿 엔진
+// 템플릿엔진
 // .hbs 확장자를 처리하는 express-handlebars의 템플릿 엔진을 등록
 app.engine(".hbs", engine({ defaultLayout: "main", extname: ".hbs" }));
 // app.engine()에서 등록한 템플릿 엔진의 이름과 일치해야 합니다.
@@ -43,30 +51,24 @@ app.use(
     resave: false, // 세션이 수정되지 않아도 항상 저장 여부 // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
     saveUninitialized: true, // 초기화되지 않은 세션도 저장 여부 // uninitialized 초기화되지않은세션을 저장하는 속성.
     cookie: { secure: false }, // HTTPS에서만 쿠키를 전달하도록 설정
+    //     store: MongoStore.create({mongoUrl: process.env.MONGO_URI,}),
   })
 );
-// app.use(
-//   session({
-//     secret: 'keyboard cat',
-//     resave: false,
-//     saveUninitialized: false,
-//     store: MongoStore.create({mongoUrl: process.env.MONGO_URI,}),
-//   })
-// )
 
-// passport 인증 미들웨어
-app.use(passport.initialize());
-app.use(passport.session());
+// 인증
+// passport.js : 세션에 인증 데이터를 저장하고, 필요할 때 복원하여 인증 상태를 유지
+app.use(passport.initialize()); // 초기화
+app.use(passport.session()); // Passport가 Express 세션과 상호작용하도록 설정
 
 // 정적파일
 app.use(express.static(path.join(__dirname, "../public/css")));
 
 // 라우터
+// app.use("/api/posts", posts);
 app.use("/", home);
 app.use("/auth", auth);
-// app.use("/api/posts", posts);
 
-// 에러 핸들러
+// 에러
 app.use(notFound);
 app.use(errorHandler);
 
