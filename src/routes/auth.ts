@@ -12,10 +12,7 @@ router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
-  //   성공하면 콜백실행
-  (req, res) => {
-    res.redirect("/dashboard");
-  }
+  (req, res) => res.redirect("/dashboard") //   성공하면 콜백실행
 );
 
 // @desc    Logout user
