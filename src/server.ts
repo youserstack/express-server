@@ -7,12 +7,13 @@ import path from "path";
 import connectDB from "./configs/db";
 import notFound from "./middlewares/notFound";
 import { engine } from "express-handlebars";
-import home from "./routes/index";
+import index from "./routes/index";
 import auth from "./routes/auth";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import session from "express-session";
-import { logMiddleware } from "./middlewares/log";
+import { logLine } from "./middlewares/log";
+import MongoStore from "connect-mongo";
 // import posts from "./routes/posts";
 // import moment from "moment";
 
@@ -45,8 +46,8 @@ app.use(
     secret: "mySecretKey", // 세션 암호화를 위한 키
     resave: false, // 세션이 수정되지 않아도 항상 저장 여부 // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
     saveUninitialized: true, // 초기화되지 않은 세션도 저장 여부 // uninitialized 초기화되지않은세션을 저장하는 속성.
-    cookie: { secure: false }, // HTTPS에서만 쿠키를 전달하도록 설정
-    //     store: MongoStore.create({mongoUrl: process.env.MONGO_URI,}),
+    // cookie: { secure: false }, // HTTPS에서만 쿠키를 전달하도록 설정
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   })
 );
 
@@ -69,8 +70,8 @@ app.set("views", "./views");
 
 // 라우터 -----------------------
 // app.use("/api/posts", posts);
-app.use("/", logMiddleware, home);
-app.use("/auth", logMiddleware, auth);
+app.use("/", logLine, index);
+app.use("/auth", logLine, auth);
 
 // 에러(미들웨어)
 app.use(notFound);
