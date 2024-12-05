@@ -11,7 +11,7 @@ export default function (passport: PassportStatic) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        callbackURL: "http://localhost:3000/auth/google/callback",
+        callbackURL: "/auth/google/callback",
       },
       // 로그인
       // google(authorization server) 에서 인증처리 후
@@ -45,13 +45,13 @@ export default function (passport: PassportStatic) {
 
   // 세션 저장
   passport.serializeUser((user: any, done) => {
-    // console.log("serializeUser");
+    // console.log("serializeUser", { user });
     done(null, user.id);
   });
 
   // 세션 조회
   passport.deserializeUser(async (id, done) => {
-    // console.log("deserializeUser");
+    // console.log("deserializeUser", { id });
     try {
       const user = await User.findById(id);
       done(null, user);

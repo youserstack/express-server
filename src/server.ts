@@ -9,6 +9,7 @@ import notFound from "./middlewares/notFound";
 import { engine } from "express-handlebars";
 import index from "./routes/index";
 import auth from "./routes/auth";
+import stories from "./routes/stories";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import session from "express-session";
@@ -44,9 +45,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
     secret: "mySecretKey", // 세션 암호화를 위한 키
-    resave: false, // 세션이 수정되지 않아도 항상 저장 여부 // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
-    saveUninitialized: true, // 초기화되지 않은 세션도 저장 여부 // uninitialized 초기화되지않은세션을 저장하는 속성.
-    // cookie: { secure: false }, // HTTPS에서만 쿠키를 전달하도록 설정
+    resave: false, // false: 세션이 수정되지 않아도 항상 저장하지 않겠다. 다시말해서, 세션이 수정되면 저장하겠다. // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
+    saveUninitialized: true, // 초기화되지 않은 세션도 저장 여부
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   })
 );
@@ -56,8 +56,8 @@ app.use(
 app.use(passport.initialize()); // 초기화
 app.use(passport.session()); // Passport가 Express 세션과 상호작용하도록 설정
 
-// 정적파일(static html)
-app.use(express.static(path.join(__dirname, "../public/css")));
+// 정적파일(static html, css...)
+app.use(express.static(path.join(__dirname, "../public")));
 
 // 템플릿엔진(dynamic html)
 // .hbs 확장자를 처리하는 express-handlebars의 템플릿 엔진을 등록
@@ -66,12 +66,13 @@ app.engine(".hbs", engine({ defaultLayout: "main", extname: ".hbs" }));
 // 템플릿 파일의 기본 확장자를 .hbs로 설정.
 // app.engine('hbs', ...)에서 등록된 템플릿 엔진(여기서는 express-handlebars)을 사용하여 .hbs 파일을 렌더링.
 app.set("view engine", ".hbs");
-app.set("views", "./views");
+// app.set("views", "./views");
 
 // 라우터 -----------------------
 // app.use("/api/posts", posts);
-app.use("/", logLine, index);
-app.use("/auth", logLine, auth);
+app.use("/", index);
+app.use("/auth", auth);
+app.use("/stories", stories);
 
 // 에러(미들웨어)
 app.use(notFound);

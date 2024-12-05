@@ -14,11 +14,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
     <title>Main</title>
   </head>
   <body>
     {{> _header}}
+    {{> _add_btn}}
 
     <div class="container">
       {{{body}}}
@@ -36,6 +37,7 @@
         M.Sidenav.init(document.querySelector('.sidenav'))
         M.FormSelect.init(document.querySelector('#status'))
 
+        {{!-- wysiwyg editor --}}
         CKEDITOR.replace('body', {
             plugins: 'wysiwygarea, toolbar, basicstyles, link'
         })
