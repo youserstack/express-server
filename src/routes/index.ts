@@ -14,13 +14,11 @@ router.get("/", ensureGuest, (req, res) => {
 // @route   GET /dashboard
 router.get("/dashboard", ensureAuth, async (req: any, res) => {
   try {
-    const stories = await Story.find({ user: req.user?.id.toString() })
+    const stories = await Story.find({ user: req.user?.id })
       // lean 메서드는 document가 아니라 plan object를 리턴한다.
       .lean();
-    res.render("dashboard", {
-      name: req.user?.firstName,
-      stories,
-    });
+    console.log("dashboard", { stories });
+    res.render("dashboard", { name: req.user?.firstName, stories });
   } catch (err) {
     console.error(err);
     res.render("error/500");
