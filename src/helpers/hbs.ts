@@ -25,7 +25,9 @@ export const editIcon = (
   storyId: string,
   floating: boolean = true
 ): string => {
-  console.log({ storyUser, loggedUser, storyId, floating });
+  // console.log({ floating });
+  // storyUser: 게시글 작성자
+  // loggedUser: 로그인 사용자
   if (storyUser._id.toString() == loggedUser._id.toString()) {
     if (floating) {
       return `<a href="/stories/edit/${storyId}" class="btn-floating halfway-fab blue"><i class="fas fa-edit fa-small"></i></a>`;

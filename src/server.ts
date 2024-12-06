@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import bodyParser from "body-parser";
 import errorHandler from "./middlewares/error";
 import path from "path";
 import connectDB from "./configs/db";
@@ -16,7 +15,6 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import { editIcon, formatDate, select, stripTags, truncate } from "./helpers/hbs";
 // import posts from "./routes/posts";
-// import moment from "moment";
 
 // 환경설정
 {
@@ -47,8 +45,8 @@ const port = process.env.PORT || 8000;
   }
 
   // 파싱
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // 세션
   app.use(
@@ -97,7 +95,6 @@ const port = process.env.PORT || 8000;
   // app.use("/api/posts", posts);
   app.use("/", index);
   app.use("/auth", auth);
-  app.use("/stories", stories);
 }
 
 // 에러(미들웨어)
