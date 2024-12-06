@@ -18,7 +18,7 @@
     "rootDir": "src", // TypeScript 소스 파일 위치
     "moduleResolution": "node" // Node.js 방식으로 모듈 해석
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/types/**/*.d.ts", "src/helpers/hbs.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules"],
   // ts-node 파일 설정
   // true: 모든 파일을 컴파일 대상으로 설정

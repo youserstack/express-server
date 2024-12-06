@@ -2,23 +2,16 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import errorHandler from "./middlewares/error";
-import path from "path";
 import connectDB from "./configs/db";
 import notFound from "./middlewares/notFound";
-import { engine } from "express-handlebars";
-import index from "./routes/index";
-import auth from "./routes/auth";
-import stories from "./routes/stories";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import { editIcon, formatDate, select, stripTags, truncate } from "./helpers/hbs";
-// import posts from "./routes/posts";
+import router from "./routes";
 
 // 환경설정
 {
-  // 환경변수
   dotenv.config();
 
   // 인증
@@ -62,50 +55,16 @@ const port = process.env.PORT || 8000;
   // passport.js : 세션에 인증 데이터를 저장하고, 필요할 때 복원하여 인증 상태를 유지
   app.use(passport.initialize()); // 초기화
   app.use(passport.session()); // Passport가 Express 세션과 상호작용하도록 설정
-
-  // 정적파일(static html, css...)
-  app.use(express.static(path.join(__dirname, "../public")));
-
-  // 템플릿엔진(dynamic html)
-  {
-    // 템플릿에서 사용할 변수설정
-    app.use(function (req, res, next) {
-      res.locals.user = req.user || null;
-      next();
-    });
-
-    // .hbs 확장자를 처리하는 express-handlebars의 템플릿 엔진을 등록
-    app.engine(
-      ".hbs",
-      engine({
-        defaultLayout: "main",
-        extname: ".hbs",
-        helpers: { formatDate, stripTags, truncate, editIcon, select },
-      })
-    );
-    // app.engine()에서 등록한 템플릿 엔진의 이름과 일치해야 합니다.
-    // 템플릿 파일의 기본 확장자를 .hbs로 설정.
-    // app.set("views", "./views");
-    app.set("view engine", ".hbs");
-  }
 }
 
 // 라우터(미들웨어)
-{
-  // app.use("/api/posts", posts);
-  app.use("/", index);
-  app.use("/auth", auth);
-}
+app.use("/api", router);
 
 // 에러(미들웨어)
-{
-  app.use(notFound);
-  app.use(errorHandler);
-}
+app.use(notFound);
+app.use(errorHandler);
 
 // 서버 시작
-{
-  app.listen(port, async () => {
-    console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
-  });
-}
+app.listen(port, async () => {
+  console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
+});

@@ -1,27 +1,10 @@
 import { Router } from "express";
-import { ensureAuth, ensureGuest } from "../middlewares/auth";
-import Story from "../models/Story";
+import posts from "./posts";
+import auth from "./auth";
 
 const router = Router();
 
-// @desc    Login/Landing page
-// @route   GET /
-router.get("/", ensureGuest, (req, res) => {
-  res.render("login", { layout: "login" }); // views/login.hbs 라는 파일의 이름
-});
-
-// @desc    Dashboard
-// @route   GET /dashboard
-router.get("/dashboard", ensureAuth, async (req: any, res) => {
-  try {
-    const stories = await Story.find({ user: req.user?.id })
-      // lean 메서드는 document가 아니라 plan object를 리턴한다.
-      .lean();
-    res.render("dashboard", { name: req.user?.firstName, stories });
-  } catch (err) {
-    console.error(err);
-    res.render("error/500");
-  }
-});
+router.use("/posts", posts);
+router.use("/auth", auth);
 
 export default router;

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import Post from "../models/Post";
 
 let posts = [
   { id: 0, title: "some1" },
@@ -9,14 +10,18 @@ let posts = [
 // @desc    Get all posts
 // @route   GET /api/posts
 export const getPosts = async (req: Request, res: Response, next: NextFunction) => {
-  // 쿼리파라미터
-  const limit = parseInt(req.query.limit as string);
+  try {
+    // 쿼리 파라미터로 받은 limit 값 처리
+    const limit = parseInt(req.query.limit as string) || 10; // 기본값은 10
+    if (isNaN(limit) || limit <= 0) return res.status(400).json({ message: "Invalid limit value" });
 
-  if (!isNaN(limit) && limit > 0) {
-    return res.status(200).json(posts.slice(0, limit));
+    const posts = await Post.find().limit(limit);
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-
-  res.status(200).json(posts);
 };
 
 // @desc    Get single post
