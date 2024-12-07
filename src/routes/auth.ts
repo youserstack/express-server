@@ -3,20 +3,17 @@ import passport from "passport";
 
 const router = Router();
 
-// @desc    Auth with Google
-// @route   GET /auth/google
+// Auth with Google
 router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
 
-// @desc    Google auth callback
-// @route   GET /auth/google/callback
+// Google auth callback
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => res.redirect("/dashboard") //   성공하면 콜백실행
 );
 
-// @desc    Logout user
-// @route   /auth/logout
+// Logout user
 router.get("/logout", (req, res, next) => {
   req.logout((error) => {
     if (error) return next(error);

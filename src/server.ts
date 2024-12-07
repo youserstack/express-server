@@ -8,7 +8,7 @@ import passport from "passport";
 import passportConfig from "./configs/passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import router from "./routes";
+import routes from "./routes";
 
 // 환경설정
 {
@@ -58,7 +58,7 @@ const port = process.env.PORT || 8000;
 }
 
 // 라우터(미들웨어)
-app.use("/api", router);
+app.use("/api", routes);
 
 // 에러(미들웨어)
 app.use(notFound);
