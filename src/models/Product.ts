@@ -10,6 +10,7 @@ const productSchema = new mongoose.Schema(
     brand: { type: String, required: true },
     maker: { type: String, required: true },
     seller: { type: String, required: true },
+    description: { type: String, required: true },
     category1: { type: String, required: true },
     category2: { type: String },
     category3: { type: String },

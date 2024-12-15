@@ -9,6 +9,7 @@ import passportConfig from "./configs/passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import routes from "./routes";
+import cors from "cors";
 
 // 환경설정
 {
@@ -40,6 +41,9 @@ const port = process.env.PORT || 8000;
   // 파싱
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  // cors 정책
+  app.use(cors()); // 모든 출처 허용
 
   // 세션
   app.use(
