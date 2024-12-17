@@ -15,7 +15,18 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     if (isNaN(limit) || limit <= 0) return res.status(400).json({ message: "Invalid limit value" });
-    const products = await Product.find().limit(limit).lean(); // lean 을 사용해서 origin data 를 리턴받는다.
+
+    // 쿼리 조건 객체 초기화
+    const query: any = {};
+    const { ids } = req.query;
+    console.log({ ids });
+    if (ids) {
+      const idsArray = Array.isArray(ids) ? ids : [ids]; // ids가 배열이 아닐 경우 배열로 변환
+      console.log({ idsArray });
+      query._id = { $in: idsArray }; // ids 배열에 해당하는 제품만 조회
+    }
+
+    const products = await Product.find(query).limit(limit).lean(); // lean 을 사용해서 origin data 를 리턴받는다.
     res.status(200).json(products);
   } catch (error) {
     console.error("getProducts error", error);

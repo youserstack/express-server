@@ -1,5 +1,27 @@
 import mongoose from "mongoose";
 
+// const optionSchema = new mongoose.Schema({
+//   color: { type: String },
+//   size: { type: String },
+// });
+
+const itemSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+  color: { type: String },
+  size: { type: String },
+
+  //   options: {
+  //     type: [optionSchema],
+  //     required: true,
+  //   },
+});
+
 const cartSchema = new mongoose.Schema(
   {
     userId: {
@@ -7,18 +29,10 @@ const cartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    items: [
-      {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        quantity: { type: Number, required: true },
-        price: { type: Number, required: true },
-      },
-    ],
-    total: { type: Number, required: true },
+    items: {
+      type: [itemSchema],
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -26,3 +40,17 @@ const cartSchema = new mongoose.Schema(
 const Cart = mongoose.model("Cart", cartSchema);
 
 export default Cart;
+
+// items: [
+//   {
+//     productId: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: "Product",
+//       required: true,
+//     },
+//     quantity: { type: Number, required: true },
+//     price: { type: Number, required: true },
+//     color: { type: Number },
+//     size: { type: Number },
+//   },
+// ],
