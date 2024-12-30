@@ -12,6 +12,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 };
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
+  // console.log("\n\n\ntesting...", { user: req.user }, "\n\n\n");
   try {
     const limit = parseInt(req.query.limit as string) || 10;
     if (isNaN(limit) || limit <= 0) return res.status(400).json({ message: "Invalid limit value" });

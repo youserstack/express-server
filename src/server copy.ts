@@ -2,29 +2,39 @@ import express from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import errorHandler from "./middlewares/error";
-import connectDB from "./configs/db"; // DB 연결은 여전히 필요할 수 있습니다.
+import connectDB from "./configs/db";
 import notFound from "./middlewares/notFound";
-import cors from "cors";
-import routes from "./routes";
-import session from "express-session";
 import passport from "passport";
 import passportConfig from "./configs/passport";
+import session from "express-session";
 import MongoStore from "connect-mongo";
+import routes from "./routes";
+import cors from "cors";
 
 // 환경설정
-dotenv.config();
-connectDB(); // 데이터베이스
-passportConfig(passport); // 인증
+{
+  dotenv.config();
 
-// 서버 생성
+  // 인증
+  passportConfig(passport);
+
+  // 데이터베이스
+  connectDB();
+}
+
+// 서버생성
 const app = express();
 const port = process.env.PORT || 8000;
-const sessionSecret = process.env.SESSION_SECRET || "temp";
 
 // 미들웨어
 {
   // 로깅
   if (process.env.NODE_ENV === "development") {
+    // morgan 미들웨어 설정
+    // 커스텀 토큰 생성 (현재 시간을 yyyy-mm-dd 형식으로 반환)
+    // morgan.token("korea-time", () => moment().format("YYYY-MM-DD HH:mm:ss"));
+    // app.use(morgan(":korea-time :method :url :status :response-time ms"));
+    // app.use(morgan("dev"));
     app.use(morgan("dev"));
   }
 
@@ -36,9 +46,10 @@ const sessionSecret = process.env.SESSION_SECRET || "temp";
   app.use(cors()); // 모든 출처 허용
 
   // 세션
+  // express-session : 서버에서 세션을 생성하고 관리
   app.use(
     session({
-      secret: sessionSecret, // 세션 암호화를 위한 키
+      secret: "mySecretKey", // 세션 암호화를 위한 키
       resave: false, // false: 세션이 수정되지 않아도 항상 저장하지 않겠다. 다시말해서, 세션이 수정되면 저장하겠다. // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
       saveUninitialized: false, // 초기화되지 않은 세션도 저장 여부
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),

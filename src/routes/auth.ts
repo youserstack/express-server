@@ -3,14 +3,28 @@ import passport from "passport";
 
 const router = Router();
 
-// Auth with Google
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+// Google 로그인 라우트
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-// Google auth callback
+// Naver 로그인 라우트
+router.get("/naver", passport.authenticate("naver", { scope: ["profile", "email"] }));
+
+// Google 인증 후 콜백 처리
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => res.redirect("/dashboard") //   성공하면 콜백실행
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
+
+// Naver 인증 후 콜백 처리
+router.get(
+  "/naver/callback",
+  passport.authenticate("naver", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/");
+  }
 );
 
 // Logout user

@@ -1,11 +1,13 @@
 import { PassportStatic } from "passport";
 import googleOauth2 from "passport-google-oauth20";
 import User from "../models/User";
+import naverOauth2 from "passport-naver"; // passport-naver 모듈을 추가
 
 const GoogleStrategy = googleOauth2.Strategy;
+const NaverStrategy = naverOauth2.Strategy;
 
 export default function (passport: PassportStatic) {
-  // passport를 사용한 로그인
+  // Google OAuth2.0 전략 설정
   passport.use(
     new GoogleStrategy(
       {
@@ -13,9 +15,6 @@ export default function (passport: PassportStatic) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         callbackURL: "/auth/google/callback",
       },
-      // 로그인
-      // google(authorization server) 에서 인증처리 후
-      // express-server(client application) 에서 인증처리
       async (accessToken, refreshToken, profile, done) => {
         const newUser = {
           googleId: profile.id,
@@ -38,6 +37,42 @@ export default function (passport: PassportStatic) {
           }
         } catch (err) {
           console.error("로그인 처리를 실패했습니다.", err);
+        }
+      }
+    )
+  );
+
+  // Naver OAuth2.0 전략 설정
+  passport.use(
+    new NaverStrategy(
+      {
+        clientID: process.env.NAVER_CLIENT_ID as string,
+        clientSecret: process.env.NAVER_CLIENT_SECRET as string,
+        callbackURL: "/auth/naver/callback",
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        const newUser = {
+          naverId: profile.id,
+          displayName: profile.displayName,
+          firstName: profile.name?.givenName,
+          lastName: profile.name?.familyName,
+          image: profile.photos?.[0].value || "",
+        };
+
+        try {
+          let user = await User.findOne({ naverId: profile.id });
+
+          if (user) {
+            console.log("기존 사용자의 로그인이 처리되었습니다.");
+            done(null, user);
+          } else {
+            user = await User.create(newUser);
+            console.log("회원가입을 처리하고 로그인을 처리했습니다.");
+            done(null, user);
+          }
+        } catch (err) {
+          console.error("로그인 처리를 실패했습니다.", err);
+          done(err, null);
         }
       }
     )
