@@ -13,7 +13,7 @@ export default function (passport: PassportStatic) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        callbackURL: "/api/auth/google/callback",
+        callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log({ profile });
@@ -49,7 +49,7 @@ export default function (passport: PassportStatic) {
       {
         clientID: process.env.NAVER_CLIENT_ID as string,
         clientSecret: process.env.NAVER_CLIENT_SECRET as string,
-        callbackURL: "/api/auth/naver/callback",
+        callbackURL: process.env.NAVER_CALLBACK_URL as string,
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log({ profile });
@@ -81,13 +81,13 @@ export default function (passport: PassportStatic) {
 
   // 세션 저장
   passport.serializeUser((user: any, done) => {
-    // console.log("serializeUser", { user });
+    console.log("serializeUser", { user });
     done(null, user.id);
   });
 
   // 세션 조회
   passport.deserializeUser(async (id, done) => {
-    // console.log("deserializeUser", { id });
+    console.log("deserializeUser", { id });
     try {
       const user = await User.findById(id);
       done(null, user);

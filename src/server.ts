@@ -10,7 +10,6 @@ import session from "express-session";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import MongoStore from "connect-mongo";
-import auth from "./routes/auth";
 
 // 환경설정
 dotenv.config();
@@ -34,22 +33,22 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   app.use(express.urlencoded({ extended: true }));
 
   // cors 정책
-  app.use(
-    cors({
-      origin: ["https://localhost:3000"],
-      credentials: true,
-    })
-  );
+  // app.use(
+  //   cors({
+  //     origin: ["https://localhost:3000"],
+  //     credentials: true,
+  //   })
+  // );
 
   // app.use(cors()); // 모든 출처 허용
   // app.use(cors({ origin: true, credentials: true }));
-  // app.use(
-  //   cors({
-  //     origin: "http://localhost:3000", // 허용할 도메인
-  //     methods: ["GET", "POST"],
-  //     credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
-  //   })
-  // );
+  app.use(
+    cors({
+      origin: "http://localhost:3000", // 허용할 도메인
+      methods: ["GET", "POST"],
+      credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
+    })
+  );
 
   // 세션
   app.use(
@@ -60,7 +59,8 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
       cookie: {
         httpOnly: true,
-        // secure:true
+        // secure: true,
+        // secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
       },
     })
   );
@@ -73,7 +73,6 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 
 // 라우터(미들웨어)
 app.use("/api", routes);
-// app.use("/auth", auth);
 
 // 에러(미들웨어)
 app.use(notFound);
