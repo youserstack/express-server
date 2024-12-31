@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
-    required: true,
+  },
+  naverId: {
+    type: String,
   },
   displayName: {
     type: String,
@@ -11,7 +13,6 @@ const userSchema = new mongoose.Schema({
   },
   firstName: {
     type: String,
-    required: true,
   },
   lastName: {
     type: String,

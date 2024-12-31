@@ -23,7 +23,7 @@ router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   }
 );
 

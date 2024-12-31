@@ -10,6 +10,7 @@ import session from "express-session";
 import passport from "passport";
 import passportConfig from "./configs/passport";
 import MongoStore from "connect-mongo";
+import auth from "./routes/auth";
 
 // 환경설정
 dotenv.config();
@@ -19,7 +20,7 @@ passportConfig(passport); // 인증
 // 서버 생성
 const app = express();
 const port = process.env.PORT || 8000;
-const sessionSecret = process.env.SESSION_SECRET || "temp";
+const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 
 // 미들웨어
 {
@@ -33,15 +34,34 @@ const sessionSecret = process.env.SESSION_SECRET || "temp";
   app.use(express.urlencoded({ extended: true }));
 
   // cors 정책
-  app.use(cors()); // 모든 출처 허용
+  app.use(
+    cors({
+      origin: ["https://localhost:3000"],
+      credentials: true,
+    })
+  );
+
+  // app.use(cors()); // 모든 출처 허용
+  // app.use(cors({ origin: true, credentials: true }));
+  // app.use(
+  //   cors({
+  //     origin: "http://localhost:3000", // 허용할 도메인
+  //     methods: ["GET", "POST"],
+  //     credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
+  //   })
+  // );
 
   // 세션
   app.use(
     session({
-      secret: sessionSecret, // 세션 암호화를 위한 키
-      resave: false, // false: 세션이 수정되지 않아도 항상 저장하지 않겠다. 다시말해서, 세션이 수정되면 저장하겠다. // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
+      secret: sessionCookieSecret, // 세션 암호화를 위한 키
+      resave: false, // false: 세션이 수정되지 않으면 항상 저장하지 않겠다. 다시말해서, 세션이 수정되면 저장하겠다. // resave: true 는 요청시마다 세션저장한다. 세션이 수정되지 않아도 저장을 한다.
       saveUninitialized: false, // 초기화되지 않은 세션도 저장 여부
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+      cookie: {
+        httpOnly: true,
+        // secure:true
+      },
     })
   );
 
@@ -53,6 +73,7 @@ const sessionSecret = process.env.SESSION_SECRET || "temp";
 
 // 라우터(미들웨어)
 app.use("/api", routes);
+// app.use("/auth", auth);
 
 // 에러(미들웨어)
 app.use(notFound);

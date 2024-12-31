@@ -13,9 +13,10 @@ export default function (passport: PassportStatic) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-        callbackURL: "/auth/google/callback",
+        callbackURL: "/api/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
+        console.log({ profile });
         const newUser = {
           googleId: profile.id,
           displayName: profile.displayName,
@@ -48,16 +49,16 @@ export default function (passport: PassportStatic) {
       {
         clientID: process.env.NAVER_CLIENT_ID as string,
         clientSecret: process.env.NAVER_CLIENT_SECRET as string,
-        callbackURL: "/auth/naver/callback",
+        callbackURL: "/api/auth/naver/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
+        console.log({ profile });
         const newUser = {
           naverId: profile.id,
           displayName: profile.displayName,
-          firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName,
-          image: profile.photos?.[0].value || "",
+          image: profile._json.profile_image || "",
         };
+        console.log({ newUser });
 
         try {
           let user = await User.findOne({ naverId: profile.id });
