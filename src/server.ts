@@ -59,6 +59,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
       cookie: {
         httpOnly: true,
+        // secure: false,
         // secure: true,
         // secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
       },
