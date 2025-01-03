@@ -20,10 +20,9 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
     // 쿼리 조건 객체 초기화
     const query: any = {};
     const { ids } = req.query;
-    console.log({ ids });
     if (ids) {
+      console.log("productQueryIds", ids);
       const idsArray = Array.isArray(ids) ? ids : [ids]; // ids가 배열이 아닐 경우 배열로 변환
-      console.log({ idsArray });
       query._id = { $in: idsArray }; // ids 배열에 해당하는 제품만 조회
     }
 

@@ -29,16 +29,11 @@ router.get(
 
 // Logout user
 router.get("/logout", (req, res, next) => {
-  // const session = req.session;
-  // console.log({ session });
-
   req.logout((error) => {
     if (error) return next(error);
-    // res.clearCookie("connect.sid", { path: "/" });
-    res.redirect("/api/logout"); // next-server(proxy)으로 리다이렉트
+    res.redirect("http://localhost:3000/api/logout"); // next-server(reverse-proxy)으로 리다이렉트
   });
 
-  // console.log({ session });
   console.log("서버에서 로그아웃처리했습니다.");
 });
 

@@ -32,16 +32,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // cors 정책
-  // app.use(
-  //   cors({
-  //     origin: ["https://localhost:3000"],
-  //     credentials: true,
-  //   })
-  // );
-
-  // app.use(cors()); // 모든 출처 허용
-  // app.use(cors({ origin: true, credentials: true }));
+  // cors
   app.use(
     cors({
       origin: "http://localhost:3000", // 허용할 도메인
