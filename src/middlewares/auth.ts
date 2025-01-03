@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
 export const ensureAuth = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.cookies);
-
   if (req.isAuthenticated()) {
     // 인증된 경우 다음 미들웨어로 이동
     console.log(req.method, req.originalUrl, "ensureAuth", "인증된사용자");

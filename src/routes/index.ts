@@ -2,7 +2,7 @@ import { Router } from "express";
 import posts from "./posts";
 import auth from "./auth";
 import products from "./products";
-import { ensureAuth } from "../middlewares/auth";
+import orders from "./orders";
 
 const router = Router();
 
@@ -13,12 +13,6 @@ router.use("/profile", (req, res) => {
   const user = req.user;
   return res.status(200).json({ user });
 });
-router.use("/order", (req, res) => {
-  const payload = req.body;
-  const user = req.user;
-  console.log({ user, payload });
-  const order = "준비중...";
-  return res.status(200).json({ order });
-});
+router.use("/orders", orders);
 
 export default router;
