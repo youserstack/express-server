@@ -16,8 +16,8 @@ export default function (passport: PassportStatic) {
         callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
       },
       async (accessToken, refreshToken, profile, done) => {
-        console.log({ profile });
-        const newUser = {
+        // console.log({ profile });
+        const googleUser = {
           googleId: profile.id,
           displayName: profile.displayName,
           firstName: profile.name?.givenName,
@@ -32,7 +32,7 @@ export default function (passport: PassportStatic) {
             console.log("기존 사용자의 로그인이 처리되었습니다.");
             done(null, user);
           } else {
-            user = await User.create(newUser);
+            user = await User.create(googleUser);
             console.log("회원가입을 처리하고 로그인을 처리했습니다.");
             done(null, user);
           }
@@ -53,12 +53,11 @@ export default function (passport: PassportStatic) {
       },
       async (accessToken, refreshToken, profile, done) => {
         // console.log({ profile });
-        const newUser = {
+        const naverUser = {
           naverId: profile.id,
           displayName: profile.displayName,
           image: profile._json.profile_image || "",
         };
-        console.log({ newUser });
 
         try {
           let user = await User.findOne({ naverId: profile.id });
@@ -67,7 +66,7 @@ export default function (passport: PassportStatic) {
             console.log("기존 사용자의 로그인이 처리되었습니다.");
             done(null, user);
           } else {
-            user = await User.create(newUser);
+            user = await User.create(naverUser);
             console.log("회원가입을 처리하고 로그인을 처리했습니다.");
             done(null, user);
           }

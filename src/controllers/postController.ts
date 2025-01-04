@@ -14,9 +14,7 @@ export const createPost = (req: Request, res: Response, next: NextFunction) => {
   };
 
   if (!newPost.title) {
-    const error = new Error(`Please include a title`) as Error & {
-      status: number;
-    };
+    const error = new Error(`Please include a title`) as any;
     error.status = 400;
     return next(error);
   }
@@ -46,9 +44,7 @@ export const getPost = (req: Request, res: Response, next: NextFunction) => {
   const post = posts.find((post) => post.id === id);
 
   if (!post) {
-    const error = new Error(`A post with the id of ${id} was not found.`) as Error & {
-      status: number;
-    };
+    const error = new Error(`A post with the id of ${id} was not found.`) as any;
     error.status = 404;
     return next(error);
   }
@@ -61,9 +57,7 @@ export const updatePost = (req: Request, res: Response, next: NextFunction) => {
   const post = posts.find((post) => post.id === id);
 
   if (!post) {
-    const error = new Error(`A post with the id of ${id} was not found.`) as Error & {
-      status: number;
-    };
+    const error = new Error(`A post with the id of ${id} was not found.`) as any;
     error.status = 404;
     return next(error);
   }

@@ -39,9 +39,7 @@ export const getProduct = async (req: Request, res: Response, next: NextFunction
     const id = req.params.id;
     const product = await Product.findById(id).lean();
     if (!product) {
-      const error = new Error(`A product with the id of ${id} was not found.`) as Error & {
-        status: number;
-      };
+      const error = new Error(`A product with the id of ${id} was not found.`) as any;
       error.status = 404;
       return next(error);
     }
@@ -57,6 +55,11 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
     const id = req.params.id;
     const updatedFields = req.body;
     const product = await Product.findByIdAndUpdate(id, updatedFields, { new: true });
+    if (!product) {
+      const error = new Error(`A product with the id of ${id} was not found.`) as any;
+      error.status = 404;
+      return next(error);
+    }
     res.status(200).json(product);
   } catch (error) {
     console.error("updateProduct error", error);
@@ -68,6 +71,11 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
   try {
     const id = req.params.id;
     const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      const error = new Error(`A product with the id of ${id} was not found.`) as any;
+      error.status = 404;
+      return next(error);
+    }
     res.status(200).json(product);
   } catch (error) {
     console.error("deleteProduct error", error);
