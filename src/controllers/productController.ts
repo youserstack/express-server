@@ -13,9 +13,8 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 };
 
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
-  // console.log("\n\n\ntesting...", { user: req.user }, "\n\n\n");
   try {
-    const ids = req.query.ids as string[];
+    const ids = req.query.ids as string | string[];
     const sort = req.query.sort as string;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
