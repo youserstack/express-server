@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Product from "../models/Product";
+import { SortOrder } from "mongoose";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,19 +15,41 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 export const getProducts = async (req: Request, res: Response, next: NextFunction) => {
   // console.log("\n\n\ntesting...", { user: req.user }, "\n\n\n");
   try {
+    const ids = req.query.ids as string[];
+    const sort = req.query.sort as string;
+    const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
-    if (isNaN(limit) || limit <= 0) return res.status(400).json({ message: "Invalid limit value" });
+    const skip = (page - 1) * limit;
 
-    // 쿼리 조건 객체 초기화
-    const query: any = {};
-    const { ids } = req.query;
-    if (ids) {
-      console.log("productQueryIds", ids);
-      const idsArray = Array.isArray(ids) ? ids : [ids]; // ids가 배열이 아닐 경우 배열로 변환
-      query._id = { $in: idsArray }; // ids 배열에 해당하는 제품만 조회
-    }
+    // 쿼리객체
+    const query: { [key: string]: any } = ids
+      ? { _id: { $in: Array.isArray(ids) ? ids : [ids] } } // ids 배열에 해당하는 제품만 조회
+      : {}; // 기본값: 조건 없음
 
-    const products = await Product.find(query).limit(limit).lean(); // lean 을 사용해서 origin data 를 리턴받는다.
+    // 정렬객체
+    const sortOption: { [key: string]: SortOrder } =
+      sort === "latest" // 최신순
+        ? // ? { createdAt: -1 }
+          // : sort === "popular" // 인기순
+          // ? { popularity: -1 }
+          { _id: -1 }
+        : sort === "priceAsc" // 가격 오름차순
+        ? { price: 1 }
+        : sort === "priceDesc" // 가격 내림차순
+        ? { price: -1 }
+        : {}; // 기본값
+
+    const products = await Product
+      // 쿼리
+      .find(query)
+      // 정렬
+      .sort(sortOption)
+      // 페이지네이션
+      .skip(skip)
+      .limit(limit)
+      // lean 을 사용해서 origin data 를 리턴받는다.
+      .lean();
+
     res.status(200).json(products);
   } catch (error) {
     console.error("getProducts error", error);
