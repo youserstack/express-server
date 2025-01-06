@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "build": "tsc",
-    "start": "cross-env NODE_ENV=production node dist/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon src/server.ts",
+    "start": "node dist/server.js",
+    "dev": "nodemon src/server.ts",
     "update": "git add . && git commit -m 'update' && git push"
   },
   "keywords": [],

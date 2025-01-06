@@ -1,9 +1,10 @@
+# production
 dist
 
-# node_modules
+# dependencies
 node_modules/
 
-# 환경 변수 파일
+# env
 .env
 .env.local
 .env.*.local
