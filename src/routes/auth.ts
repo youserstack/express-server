@@ -58,6 +58,8 @@ router.get("/logout", (req, res, next) => {
 
       // 3. 세션 쿠키 삭제
       res.clearCookie("connect.sid"); // 세션 쿠키 키 이름은 설정에 따라 다를 수 있음
+      res.end();
+      console.log("로그아웃이 처리되었습니다.");
     });
   });
 });
