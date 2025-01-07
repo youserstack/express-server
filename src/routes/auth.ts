@@ -24,6 +24,7 @@ router.get(
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
     // res.redirect("/");
+    console.log("로그인 콜백");
     res.redirect("http://localhost:3000");
   }
 );

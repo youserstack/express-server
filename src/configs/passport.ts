@@ -52,7 +52,7 @@ export default function (passport: PassportStatic) {
         callbackURL: process.env.NAVER_CALLBACK_URL as string,
       },
       async (accessToken, refreshToken, profile, done) => {
-        // console.log({ profile });
+        console.log({ profile });
         const naverUser = {
           naverId: profile.id,
           displayName: profile.displayName,
