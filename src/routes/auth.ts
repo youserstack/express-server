@@ -23,7 +23,6 @@ router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
-    // res.redirect("/");
     console.log(req.url);
     console.log(req.baseUrl);
     console.log("/api/auth/naver/callback");
