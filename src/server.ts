@@ -35,7 +35,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   // cors
   app.use(
     cors({
-      origin: "http://localhost:3000", // 허용할 도메인
+      origin: ["http://localhost:3000", "https://express-server-obqa.onrender.com"], // 허용할 도메인
       methods: ["GET", "POST"],
       credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
     })
