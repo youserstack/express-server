@@ -27,7 +27,8 @@ router.get(
     console.log(req.url);
     console.log(req.baseUrl);
     console.log("/api/auth/naver/callback");
-    res.redirect("http://localhost:3000");
+    res.redirect("/");
+    // res.redirect("http://localhost:3000");
   }
 );
 
