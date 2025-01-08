@@ -33,7 +33,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   // cors
   app.use(
     cors({
-      origin: ["http://localhost:3000", "https://nid.naver.com"], // 허용할 도메인 추가
+      origin: ["http://localhost:3000", "https://nid.naver.com", "https://genzaro.vercel.app"], // 허용할 도메인 추가
       methods: ["GET", "POST"],
       credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
     })
