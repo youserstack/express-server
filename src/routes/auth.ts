@@ -7,7 +7,11 @@ const router = Router();
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 // Naver 로그인 라우트
-router.get("/naver", passport.authenticate("naver", { scope: ["profile", "email"] }));
+router.get(
+  "/naver",
+  // passport.authenticate("naver", { scope: ["profile", "email"] })
+  passport.authenticate("naver", { scope: ["profile", "email"], state: "hamburger" })
+);
 
 // Google 인증 후 콜백 처리
 router.get(
@@ -23,6 +27,8 @@ router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
+    console.log("State received:", req.query.state); // state 파라미터 확인
+
     res.redirect("/");
     // res.redirect("http://localhost:3000");
   }
