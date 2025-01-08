@@ -24,8 +24,13 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 // 미들웨어
 {
   // 로깅
+  // if (process.env.NODE_ENV === "development") {
+  // app.use(morgan("dev"));
+  // }
   if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
+    app.use(morgan("dev")); // 개발 환경에서만 "dev" 사용
+  } else {
+    app.use(morgan("combined")); // 프로덕션에서는 "combined" 사용
   }
 
   // 파싱
@@ -50,8 +55,8 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
       cookie: {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
-        // secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
         // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
         // secure: true, // HTTPS에서만 쿠키 전송
         // secure: false, // HTTPS에서만 쿠키 전송
