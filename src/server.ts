@@ -24,14 +24,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 // 미들웨어
 {
   // 로깅
-  // if (process.env.NODE_ENV === "development") {
-  // app.use(morgan("dev"));
-  // }
-  if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev")); // 개발 환경에서만 "dev" 사용
-  } else {
-    app.use(morgan("combined")); // 프로덕션에서는 "combined" 사용
-  }
+  app.use(morgan("dev"));
 
   // 파싱
   app.use(express.json());
