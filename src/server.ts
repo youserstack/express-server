@@ -18,7 +18,7 @@ passportConfig(passport); // 인증
 
 // 서버 생성
 const app = express();
-const port = process.env.PORT || 8000;
+const port: number = Number(process.env.PORT) || 8000;
 const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 
 // 미들웨어
@@ -47,6 +47,12 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
     })
   );
+
+  app.use((req, res, next) => {
+    console.log("x-forwarded-proto:", req.headers["x-forwarded-proto"]);
+    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+    next();
+  });
 
   // 세션
   app.use(
@@ -79,6 +85,9 @@ app.use(notFound);
 app.use(errorHandler);
 
 // 서버 시작
-app.listen(port, async () => {
+app.listen(port, "0.0.0.0", async () => {
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
 });
+// app.listen(port, async () => {
+//   console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
+// });
