@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { ErrorRequestHandler, NextFunction, Router } from "express";
 import passport from "passport";
 
 const router = Router();
@@ -9,8 +9,8 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 // Naver 로그인 라우트
 router.get(
   "/naver",
-  // passport.authenticate("naver", { scope: ["profile", "email"] })
-  passport.authenticate("naver", { scope: ["profile", "email"], state: "hamburger" })
+  passport.authenticate("naver", { scope: ["profile", "email"] })
+  // passport.authenticate("naver", { scope: ["profile", "email"], state: "hamburger" })
 );
 
 // Google 인증 후 콜백 처리
@@ -23,17 +23,27 @@ router.get(
 );
 
 // Naver 인증 후 콜백 처리
+// router.get(
+//   "/naver/callback",
+//   passport.authenticate("naver", { failureRedirect: "/login", failWithError: true }),
+//   (req, res) => {
+//     res.redirect("/");
+//     // res.redirect("http://localhost:3000");
+//   }
+// );
+
+const naverAuthErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  console.error("youserstack 네이버로그인 인증에러", err);
+  res.status(500).send("youserstack 네이버로그인 인증에러");
+};
+
 router.get(
   "/naver/callback",
-  passport.authenticate("naver", { failureRedirect: "/login" }),
-  (req, res) => {
-    const url = `${req.protocol}://${req.get("host")}`;
-    console.log("url", url);
-    // res.redirect("https://genzaro.vercel.app");
-    // res.redirect(redirectUrl);
-    res.redirect("/");
-    // res.redirect("http://localhost:3000");
-  }
+  passport.authenticate("naver", { failureRedirect: "/", failWithError: true }),
+  (req: any, res: any) => {
+    res.redirect("/success"); // 인증 성공 시
+  },
+  naverAuthErrorHandler
 );
 
 // Logout user
