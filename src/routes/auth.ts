@@ -30,8 +30,8 @@ router.get(
     // const redirectUrl = `${req.protocol}://${req.get("host")}`;
     // console.log("redirectUrl", redirectUrl);
     // res.redirect(redirectUrl);
-    res.redirect("/");
-    // res.redirect("https://genzaro.vercel.app");
+    // res.redirect("/");
+    res.redirect("https://genzaro.vercel.app");
     // res.redirect("http://localhost:3000");
   }
 );
