@@ -27,24 +27,11 @@ router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
-    console.log("State received:", req.query.state); // state 파라미터 확인
-    // 요청한 URL
-    const requestedUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
-
-    // 콜백 URL
-    const callbackUrl = `${req.protocol}://${req.get("host")}/naver/callback`;
-
-    // 리디렉션 URL
-    const redirectUrl = "https://genzaro.vercel.app";
-
-    // 로그 출력
-    console.log("Requested URL:", requestedUrl);
-    console.log("Callback URL:", callbackUrl);
-    console.log("Redirect URL:", redirectUrl);
-    console.log("State received:", req.query.state); // state 파라미터 확인
-
-    res.redirect("https://genzaro.vercel.app");
+    const redirectUrl = `${req.protocol}://${req.get("host")}`;
+    console.log("redirectUrl", redirectUrl);
+    res.redirect(redirectUrl);
     // res.redirect("/");
+    // res.redirect("https://genzaro.vercel.app");
     // res.redirect("http://localhost:3000");
   }
 );

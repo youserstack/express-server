@@ -50,7 +50,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
-        sameSite: "lax",
+        sameSite: "none",
         // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
         // secure: true, // HTTPS에서만 쿠키 전송
         // secure: false, // HTTPS에서만 쿠키 전송
