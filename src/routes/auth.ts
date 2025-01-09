@@ -29,9 +29,9 @@ router.get(
   (req, res) => {
     const url = `${req.protocol}://${req.get("host")}`;
     console.log("url", url);
-    res.redirect("https://genzaro.vercel.app");
+    // res.redirect("https://genzaro.vercel.app");
     // res.redirect(redirectUrl);
-    // res.redirect("/");
+    res.redirect("/");
     // res.redirect("http://localhost:3000");
   }
 );
