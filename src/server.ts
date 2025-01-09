@@ -33,7 +33,14 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   // cors
   app.use(
     cors({
-      origin: ["http://localhost:3000", "https://nid.naver.com", "https://genzaro.vercel.app"], // 허용할 도메인 추가
+      origin: [
+        "http://localhost:3000",
+        "https://nid.naver.com",
+        "https://genzaro.vercel.app",
+        "http://genzaro.vercel.app",
+        "https://genzaro-youserstacks-projects.vercel.app",
+        "http://genzaro-youserstacks-projects.vercel.app",
+      ], // 허용할 도메인 추가
       methods: ["GET", "POST"],
       credentials: true, // 쿠키나 인증 정보를 함께 보내려면 true로 설정
     })
@@ -48,8 +55,8 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
       cookie: {
         httpOnly: true,
-        secure: true, // HTTPS에서만 쿠키 전송
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
+        // secure: true, // HTTPS에서만 쿠키 전송
         // secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
         // sameSite: "none",
         // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
