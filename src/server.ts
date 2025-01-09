@@ -23,6 +23,8 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 
 // 미들웨어
 {
+  app.set("trust proxy", 1); // Reverse Proxy 환경에서 Express가 HTTPS를 신뢰하도록 설정
+
   // 로깅
   app.use(morgan("dev"));
 
@@ -55,12 +57,10 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
       cookie: {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
-        // secure: true, // HTTPS에서만 쿠키 전송
-        // secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
-        // sameSite: "none",
         // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
-        // secure: false, // HTTPS에서만 쿠키 전송
       },
     })
   );

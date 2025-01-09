@@ -27,11 +27,11 @@ router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/login" }),
   (req, res) => {
-    // const redirectUrl = `${req.protocol}://${req.get("host")}`;
-    // console.log("redirectUrl", redirectUrl);
+    const url = `${req.protocol}://${req.get("host")}`;
+    console.log("url", url);
+    res.redirect("https://genzaro.vercel.app");
     // res.redirect(redirectUrl);
     // res.redirect("/");
-    res.redirect("https://genzaro.vercel.app");
     // res.redirect("http://localhost:3000");
   }
 );
