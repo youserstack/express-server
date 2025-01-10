@@ -51,12 +51,14 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
   );
 
   app.use((req, res, next) => {
-    console.log("x-forwarded-proto:", req.headers["x-forwarded-proto"]);
-    console.log("process.env.NODE_ENV", process.env.NODE_ENV);
+    console.log("X-Forwarded-Host:", req.headers["x-forwarded-host"]);
+    console.log("X-Forwarded-Proto:", req.headers["x-forwarded-proto"]);
+    console.log("Request Host:", req.headers.host); // 요청의 Host 헤더 값 출력
+    console.log("Request URL:", req.url); // 요청 URL을 출력
     next();
   });
 
-  // 세션
+  // 세션과 초기화
   app.use(
     session({
       secret: sessionCookieSecret, // 세션 암호화를 위한 키
@@ -72,11 +74,8 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       },
     })
   );
-
-  // 인증
-  // passport.js : 세션에 인증 데이터를 저장하고, 필요할 때 복원하여 인증 상태를 유지
   app.use(passport.initialize()); // 초기화
-  app.use(passport.session()); // Passport가 Express 세션과 상호작용하도록 설정
+  app.use(passport.session()); // 세션유지
 }
 
 // 라우터(미들웨어)

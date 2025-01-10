@@ -51,29 +51,31 @@ export default function (passport: PassportStatic) {
         clientSecret: process.env.NAVER_CLIENT_SECRET as string,
         callbackURL: process.env.NAVER_CALLBACK_URL as string,
       },
-      async (accessToken, refreshToken, profile, done) => {
-        console.log({ profile });
-        const naverUser = {
-          naverId: profile.id,
-          displayName: profile.displayName,
-          image: profile._json.profile_image || "",
-        };
+      (accessToken, refreshToken, profile, done) => {
+        process.nextTick(async function () {
+          console.log({ profile });
+          const naverUser = {
+            naverId: profile.id,
+            displayName: profile.displayName,
+            image: profile._json.profile_image || "",
+          };
 
-        try {
-          let user = await User.findOne({ naverId: profile.id });
+          try {
+            let user = await User.findOne({ naverId: profile.id });
 
-          if (user) {
-            console.log("기존 사용자의 로그인이 처리되었습니다.");
-            done(null, user);
-          } else {
-            user = await User.create(naverUser);
-            console.log("회원가입을 처리하고 로그인을 처리했습니다.");
-            done(null, user);
+            if (user) {
+              console.log("기존 사용자의 로그인이 처리되었습니다.");
+              done(null, user);
+            } else {
+              user = await User.create(naverUser);
+              console.log("회원가입을 처리하고 로그인을 처리했습니다.");
+              done(null, user);
+            }
+          } catch (err) {
+            console.error("로그인 처리를 실패했습니다.", err);
+            done(err, null);
           }
-        } catch (err) {
-          console.error("로그인 처리를 실패했습니다.", err);
-          done(err, null);
-        }
+        });
       }
     )
   );
