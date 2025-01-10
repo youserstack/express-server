@@ -15,30 +15,33 @@ export default function (passport: PassportStatic) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
       },
-      async (accessToken, refreshToken, profile, done) => {
-        // console.log({ profile });
-        const googleUser = {
-          googleId: profile.id,
-          displayName: profile.displayName,
-          firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName,
-          image: profile.photos?.[0].value || "",
-        };
+      (accessToken, refreshToken, profile, done) => {
+        // 인증 성공 후 호출되는 콜백 함수
+        process.nextTick(async function () {
+          // console.log({ profile });
+          const googleUser = {
+            googleId: profile.id,
+            displayName: profile.displayName,
+            firstName: profile.name?.givenName,
+            lastName: profile.name?.familyName,
+            image: profile.photos?.[0].value || "",
+          };
 
-        try {
-          let user = await User.findOne({ googleId: profile.id });
+          try {
+            let user = await User.findOne({ googleId: profile.id });
 
-          if (user) {
-            console.log("기존 사용자의 로그인이 처리되었습니다.");
-            done(null, user);
-          } else {
-            user = await User.create(googleUser);
-            console.log("회원가입을 처리하고 로그인을 처리했습니다.");
-            done(null, user);
+            if (user) {
+              console.log("기존 사용자의 로그인이 처리되었습니다.");
+              done(null, user);
+            } else {
+              user = await User.create(googleUser);
+              console.log("회원가입을 처리하고 로그인을 처리했습니다.");
+              done(null, user);
+            }
+          } catch (err) {
+            console.error("로그인 처리를 실패했습니다.", err);
           }
-        } catch (err) {
-          console.error("로그인 처리를 실패했습니다.", err);
-        }
+        });
       }
     )
   );
@@ -52,6 +55,7 @@ export default function (passport: PassportStatic) {
         callbackURL: process.env.NAVER_CALLBACK_URL as string,
       },
       (accessToken, refreshToken, profile, done) => {
+        // 인증 성공 후 호출되는 콜백 함수
         process.nextTick(async function () {
           console.log({ profile });
           const naverUser = {

@@ -1,19 +1,16 @@
-import { ErrorRequestHandler, NextFunction, Router } from "express";
+import { Router } from "express";
 import passport from "passport";
 
 const router = Router();
 
-// Google 로그인 라우트
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-// Naver 로그인 라우트
 router.get(
   "/naver",
-  passport.authenticate("naver", { scope: ["profile", "email"] })
-  // passport.authenticate("naver", { scope: ["profile", "email"], state: "hamburger" })
+  passport.authenticate("naver", { scope: ["profile", "email"], state: "cheeseburger" })
+  // passport.authenticate("naver", { scope: ["profile", "email"] })
 );
 
-// Google 인증 후 콜백 처리
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
@@ -22,46 +19,14 @@ router.get(
   }
 );
 
-// Naver 인증 후 콜백 처리
-// router.get(
-//   "/naver/callback",
-//   passport.authenticate("naver", { failureRedirect: "/login", failWithError: true }),
-//   (req, res) => {
-//     res.redirect("/");
-//     // res.redirect("http://localhost:3000");
-//   }
-// );
-
-const naverAuthErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.error("youserstack 네이버로그인 인증에러", err);
-  res.status(500).send("youserstack 네이버로그인 인증에러");
-};
-
 router.get(
   "/naver/callback",
   passport.authenticate("naver", { failureRedirect: "/", failWithError: true }),
-  (req: any, res: any) => {
-    res.redirect("/success"); // 인증 성공 시
-  },
-  naverAuthErrorHandler
+  (req, res) => {
+    res.redirect("/"); // 인증 성공 시
+  }
+  // naverAuthErrorHandler
 );
-
-// Logout user
-// router.get("/logout", (req, res, next) => {
-//   req.logout((error) => {
-//     if (error) return next(error);
-//     // res.redirect("http://localhost:3000/api/logout"); // next-server(reverse-proxy)으로 리다이렉트
-//   });
-//   req.session.destroy((err) => {
-//     console.log({ err });
-//     // res.clearCookie("connect.sid"); // 세션 쿠키 삭제
-//     // res.redirect("/");
-//   });
-
-//   res.redirect("http://localhost:3000/api/logout"); // next-server(reverse-proxy)으로 리다이렉트
-
-//   console.log("서버에서 로그아웃처리했습니다.");
-// });
 
 router.get("/logout", (req, res, next) => {
   // 1. Passport 로그아웃 처리
@@ -84,3 +49,8 @@ router.get("/logout", (req, res, next) => {
 });
 
 export default router;
+
+// const naverAuthErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+//   console.error("youserstack 네이버로그인 인증에러", err);
+//   res.status(500).send("youserstack 네이버로그인 인증에러");
+// };
