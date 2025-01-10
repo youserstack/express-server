@@ -23,7 +23,9 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
 
 // 미들웨어
 {
-  app.set("trust proxy", 1); // Reverse Proxy 환경에서 Express가 HTTPS를 신뢰하도록 설정
+  // Reverse Proxy 환경에서 Express가 HTTPS를 신뢰하도록 설정
+  // app.set("trust proxy", true);
+  app.enable("trust proxy");
 
   // 로깅
   app.use(morgan("dev"));
@@ -91,3 +93,5 @@ app.listen(port, "0.0.0.0", async () => {
 // app.listen(port, async () => {
 //   console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
 // });
+
+export default app;
