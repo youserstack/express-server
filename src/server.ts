@@ -68,9 +68,9 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // HTTPS에서만 쿠키 전송
-        sameSite: "none",
+        // sameSite: "none",
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
-        // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
+        sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
       },
     })
   );
@@ -86,11 +86,8 @@ app.use(notFound);
 app.use(errorHandler);
 
 // 서버 시작
-app.listen(port, "0.0.0.0", async () => {
+app.listen(port, async () => {
   console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
 });
-// app.listen(port, async () => {
-//   console.log(`Server is running in ${process.env.NODE_ENV} on port ${port}`);
-// });
 
 export default app;
