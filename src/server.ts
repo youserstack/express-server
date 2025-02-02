@@ -71,7 +71,7 @@ const sessionCookieSecret = process.env.SESSION_SECRET || "temp";
         maxAge: 1000 * 60 * 60 * 2, // 2시간 (밀리초 단위)
         // sameSite: "none",
         // sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", // CSRF 방지
-        // sameSite:'lax'
+        sameSite: "lax",
       },
     })
   );
